@@ -15,16 +15,10 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping
-    public String listarUsuarios(Model modelo) {
-        modelo.addAttribute("usuarios", usuarioService.listarTodos());
-        return "usuarios/lista";
-    }
-
     @GetMapping("/novo")
     public String exibirFormularioCadastro(Model modelo) {
         modelo.addAttribute("usuarioDTO", new UsuarioDTO());
-        return "usuarios/formulario";
+        return "cadastrar_usuario";
     }
 
     @PostMapping("/salvar")
@@ -37,13 +31,13 @@ public class UsuarioController {
             atributos.addFlashAttribute("erro", e.getMessage());
             return "redirect:/usuarios/novo";
         }
-        return "redirect:/usuarios";
+        return "redirect:/login";
     }
 
     @GetMapping("/editar/{id}")
     public String exibirFormularioEdicao(@PathVariable("id") int id, Model modelo) {
         modelo.addAttribute("usuarioDTO", usuarioService.buscarPorId(id));
-        return "usuarios/formulario";
+        return "editar_usuario";
     }
 
     @PostMapping("/atualizar/{id}")
@@ -52,13 +46,13 @@ public class UsuarioController {
                                    RedirectAttributes atributos) {
         usuarioService.atualizar(id, usuarioDTO);
         atributos.addFlashAttribute("sucesso", "Usuário atualizado com sucesso!");
-        return "redirect:/usuarios";
+        return "redirect:/";
     }
 
     @PostMapping("/desativar/{id}")
     public String desativarUsuario(@PathVariable("id") int id, RedirectAttributes atributos) {
         usuarioService.desativar(id);
         atributos.addFlashAttribute("sucesso", "Usuário desativado com sucesso!");
-        return "redirect:/usuarios";
+        return "redirect:/login";
     }
 }

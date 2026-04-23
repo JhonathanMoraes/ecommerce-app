@@ -49,6 +49,8 @@ public class PedidoService {
         dto.setStatus(pedido.getStatus());
         dto.setTotal(pedido.getTotal());
         dto.setAtivo(pedido.isAtivo());
+        dto.setNomeProduto(pedido.getProduto().getNome());
+        dto.setNota(pedido.getNota());
         return dto;
     }
 
@@ -67,6 +69,11 @@ public class PedidoService {
         Usuario usuario = usuarioService.buscarEntidadePorId(dto.getUsuario());
         Produto produto  = produtoService.buscarEntidadePorId(dto.getProduto());
 
+        if (produto.getQuantidade() < dto.getQuantidade()) {
+            throw new IllegalArgumentException("Quantidade indisponível em estoque.");
+        }
+        produtoService.atualizarQuantidadeEmEstoque(produto.getId(), dto.getQuantidade());
+
         Pedido pedido = new Pedido(
             usuario,
             produto,
@@ -82,6 +89,7 @@ public class PedidoService {
         pedido.setTotal(pagamento.aplicarDesconto(pedido));
 
         Pedido salvo = pedidoRepository.save(pedido);
+        salvo.setAtivo(true);
         return paraDTO(salvo);
     }
 
@@ -120,5 +128,25 @@ public class PedidoService {
         pedido.setStatus("CANCELADO");
         pedido.setAtivo(false);
         pedidoRepository.save(pedido);
+    }
+
+    public void avaliarPedido(int id, int nota) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado: id=" + id));
+        
+        if (!"ENVIADO".equals(pedido.getStatus())) {
+            throw new IllegalArgumentException("Apenas pedidos enviados podem ser avaliados.");
+        }
+        if (nota < 0 || nota > 10) {
+            throw new IllegalArgumentException("A nota deve ser entre 0 e 10.");
+        }
+        
+        pedido.setNota(nota);
+        pedidoRepository.save(pedido);
+        
+        Double media = pedidoRepository.mediaNotasPorProduto(pedido.getProduto().getId());
+        if (media != null) {
+            produtoService.avaliar(pedido.getProduto().getId(), (int) Math.round(media));
+        }
     }
 }

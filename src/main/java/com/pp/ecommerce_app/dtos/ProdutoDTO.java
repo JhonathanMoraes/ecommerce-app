@@ -10,13 +10,14 @@ public class ProdutoDTO {
     private int nota;
 
     private int usuario;
+    private String emailUsuario;
 
     private boolean ativo;
 
     public ProdutoDTO() {}
 
     public ProdutoDTO(int id, String nome, String descricao, int quantidade,
-                      double preco, int nota, int usuario, boolean ativo) {
+                      double preco, int nota, int usuario, String emailUsuario, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -24,6 +25,7 @@ public class ProdutoDTO {
         this.preco = preco;
         this.nota = nota;
         this.usuario = usuario;
+        this.emailUsuario = emailUsuario;
         this.ativo = ativo;
     }
 
@@ -81,6 +83,14 @@ public class ProdutoDTO {
 
     public void setUsuario(int usuario) {
         this.usuario = usuario;
+    }
+
+    public String getEmailUsuario() {
+        return emailUsuario;
+    }
+
+    public void setEmailUsuario(String emailUsuario) {
+        this.emailUsuario = emailUsuario;
     }
 
     public boolean isAtivo() {

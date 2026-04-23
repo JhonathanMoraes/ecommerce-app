@@ -6,6 +6,7 @@ public class PedidoDTO {
 
     private int usuario;
     private int produto;
+    private String nomeProduto;
 
     private int quantidade;
     private boolean ativo;
@@ -16,6 +17,7 @@ public class PedidoDTO {
     private String endereco;
 
     private double frete;
+    private Integer nota;
 
     public PedidoDTO() {}
 
@@ -52,6 +54,14 @@ public class PedidoDTO {
 
     public void setProduto(int produto) {
         this.produto = produto;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    public void setNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
     }
 
     public int getQuantidade() {
@@ -108,5 +118,13 @@ public class PedidoDTO {
 
     public void setFrete(double frete) {
         this.frete = frete;
+    }
+
+    public Integer getNota() {
+        return nota;
+    }
+
+    public void setNota(Integer nota) {
+        this.nota = nota;
     }
 }

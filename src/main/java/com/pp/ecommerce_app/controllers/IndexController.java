@@ -12,6 +12,6 @@ public class IndexController {
     
     @GetMapping("/")
     public String indexPage() {
-        return "index";
+        return "redirect:/produtos";
     }
 }

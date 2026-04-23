@@ -45,8 +45,9 @@ public class UsuarioService {
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado: " + dto.getEmail());
         }
-        Usuario salvo = usuarioRepository.save(paraEntidade(dto));
-        return paraDTO(salvo);
+        Usuario usuario = usuarioRepository.save(paraEntidade(dto));
+        usuario.setAtivo(true);
+        return paraDTO(usuario);
     }
 
     public UsuarioDTO buscarPorId(int id) {
@@ -85,6 +86,7 @@ public class UsuarioService {
             usuario.setSenha(dto.getSenha());
         }
 
+        usuario.setAtivo(true);
         return paraDTO(usuarioRepository.save(usuario));
     }
 

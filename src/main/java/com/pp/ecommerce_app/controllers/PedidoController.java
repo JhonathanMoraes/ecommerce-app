@@ -25,13 +25,13 @@ public class PedidoController {
     public String listarPedidos(Model modelo, HttpSession sessao) {
         UsuarioDTO usuarioLogado = (UsuarioDTO) sessao.getAttribute("usuarioLogado");
         modelo.addAttribute("pedidos", pedidoService.listarPorUsuario(usuarioLogado.getId()));
-        return "pedidos/lista";
+        return "lista_pedidos";
     }
 
     @GetMapping("/{id}")
     public String exibirDetalhe(@PathVariable("id") int id, Model modelo) {
         modelo.addAttribute("pedido", pedidoService.buscarPorId(id));
-        return "pedidos/detalhe";
+        return "detalhes_pedido";
     }
 
     @GetMapping("/novo")
@@ -73,5 +73,18 @@ public class PedidoController {
         pedidoService.cancelar(id);
         atributos.addFlashAttribute("sucesso", "Pedido cancelado com sucesso!");
         return "redirect:/pedidos";
+    }
+
+    @PostMapping("/avaliar/{id}")
+    public String avaliarPedido(@PathVariable("id") int id,
+                                @RequestParam("nota") int nota,
+                                RedirectAttributes atributos) {
+        try {
+            pedidoService.avaliarPedido(id, nota);
+            atributos.addFlashAttribute("sucesso", "Avaliação do pedido registrada!");
+        } catch (IllegalArgumentException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        }
+        return "redirect:/pedidos/" + id;
     }
 }

@@ -17,8 +17,8 @@ public class LoginController {
     private UsuarioService usuarioService;
 
     @GetMapping("/login")
-    public String exibirLogin() {
-        return "login/login";
+    public String telaLogin() {
+        return "login";
     }
 
     @PostMapping("/login")

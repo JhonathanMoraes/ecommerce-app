@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${produto.nome} + ' | ECommerce'">Detalhe do Produto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div th:replace="~{navbar :: navbar}"></div>
+
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item active" th:text="${produto.nome}">Produto</li>
+        </ol>
+    </nav>
+
+    <div th:if="${erro}" class="alert alert-danger d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${erro}"></span>
+    </div>
+    <div th:if="${sucesso}" class="alert alert-success d-flex align-items-center">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${sucesso}"></span>
+    </div>
+
+    <div class="row g-4">
+        <!-- Imagem -->
+        <div class="col-lg-5">
+            <img th:src="@{/default_product_img.png}" alt="Imagem do produto" class="img-fluid rounded shadow object-fit-cover w-100" style="height: 400px;">
+        </div>
+
+        <!-- Detalhes -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 p-4 h-100">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h1 class="fw-bold fs-2 mb-0" th:text="${produto.nome}">Nome do Produto</h1>
+                    <span class="badge bg-warning text-dark fs-6 ms-2 px-3 py-2">
+                        <i class="bi bi-star-fill me-1"></i>
+                        <span th:text="${produto.nota}">0</span>/10
+                    </span>
+                </div>
+
+                <p class="text-muted mb-1">
+                    <i class="bi bi-person me-1"></i>Vendido por:
+                    <strong th:text="${produto.emailUsuario}">Email</strong>
+                </p>
+
+                <div class="border-top my-3"></div>
+
+                <p class="text-muted" th:text="${produto.descricao}">Descrição do produto.</p>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-6">
+                        <div class="bg-light rounded p-3 text-center">
+                            <div class="text-muted small">Quantidade disponível</div>
+                            <div class="fw-bold fs-5" th:text="${produto.quantidade}">0</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light rounded p-3 text-center">
+                            <div class="text-muted small">Preço unitário</div>
+                            <div class="text-primary fw-bold fs-4">
+                                R$ <span th:text="${#numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-top my-3"></div>
+
+                <!-- Formulário de compra -->
+                <form th:action="@{/pedidos/salvar}" method="post">
+                    <input type="hidden" name="produto" th:value="${produto.id}">
+                    <input type="hidden" name="usuario" th:value="${session.usuarioLogado.id}">
+                    <input type="hidden" name="endereco" th:value="${session.usuarioLogado.endereco}">
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="quantidade" class="form-label fw-semibold">Quantidade</label>
+                            <input type="number" id="quantidade" name="quantidade" class="form-control"
+                                   value="1" min="1" th:max="${produto.quantidade}" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="tipoDePagamento" class="form-label fw-semibold">Tipo de Pagamento</label>
+                            <select id="tipoDePagamento" name="tipoDePagamento" class="form-select" required>
+                                <option value="">Selecione...</option>
+                                <option value="PIX">PIX</option>
+                                <option value="CREDITO">Cartão de Crédito</option>
+                                <option value="DEBITO">Cartão de Débito</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="frete" class="form-label fw-semibold">Frete (R$)</label>
+                        <div class="input-group">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" id="frete" name="frete" class="form-control"
+                                   value="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg text-white fw-semibold">
+                            <i class="bi bi-cart-check me-2"></i>Confirmar Compra
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

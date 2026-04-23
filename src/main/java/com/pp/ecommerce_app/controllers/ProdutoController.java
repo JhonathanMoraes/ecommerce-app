@@ -20,13 +20,21 @@ public class ProdutoController {
     @GetMapping
     public String listarProdutos(Model modelo) {
         modelo.addAttribute("produtos", produtoService.listarAtivos());
-        return "produtos/lista";
+        return "index";
+    }
+
+    @GetMapping("/meus")
+    public String listarMeusProdutos(Model modelo, HttpSession sessao) {
+        UsuarioDTO usuarioLogado = (UsuarioDTO) sessao.getAttribute("usuarioLogado");
+        if (usuarioLogado == null) return "redirect:/login";
+        modelo.addAttribute("produtos", produtoService.listarPorUsuario(usuarioLogado.getId()));
+        return "lista_produtos";
     }
 
     @GetMapping("/{id}")
     public String exibirDetalhe(@PathVariable("id") int id, Model modelo) {
         modelo.addAttribute("produto", produtoService.buscarPorId(id));
-        return "produtos/detalhe";
+        return "detalhes_produto";
     }
 
     @GetMapping("/novo")
@@ -35,7 +43,7 @@ public class ProdutoController {
         ProdutoDTO dto = new ProdutoDTO();
         dto.setUsuario(usuarioLogado.getId());
         modelo.addAttribute("produtoDTO", dto);
-        return "produtos/formulario";
+        return "cadastrar_produto";
     }
 
     @PostMapping("/salvar")
@@ -49,16 +57,16 @@ public class ProdutoController {
     @GetMapping("/editar/{id}")
     public String exibirFormularioEdicao(@PathVariable("id") int id, Model modelo) {
         modelo.addAttribute("produtoDTO", produtoService.buscarPorId(id));
-        return "produtos/formulario";
+        return "cadastrar_produto";
     }
 
     @PostMapping("/atualizar/{id}")
     public String atualizarProduto(@PathVariable("id") int id,
-                                   @ModelAttribute("produtoDTO") ProdutoDTO produtoDTO,
-                                   RedirectAttributes atributos) {
+                                           @ModelAttribute("produtoDTO") ProdutoDTO produtoDTO,
+                                           RedirectAttributes atributos) {
         produtoService.atualizar(id, produtoDTO);
         atributos.addFlashAttribute("sucesso", "Produto atualizado com sucesso!");
-        return "redirect:/produtos";
+        return "redirect:/produtos/meus";
     }
 
     @PostMapping("/avaliar/{id}")

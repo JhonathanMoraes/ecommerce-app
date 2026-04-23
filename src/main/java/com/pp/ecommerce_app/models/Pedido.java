@@ -39,6 +39,12 @@ public class Pedido {
     @Column
     private double frete;
 
+    @Column
+    private Integer nota;
+
+    public Pedido() {
+    }
+
     public Pedido(Usuario usuario, Produto produto, int quantidade, String tipoDePagamento, String endereco, double frete) {
         this.usuario = usuario;
         this.produto = produto;
@@ -126,6 +132,14 @@ public class Pedido {
 
     public void setFrete(double frete) {
         this.frete = frete;
+    }
+
+    public Integer getNota() {
+        return nota;
+    }
+
+    public void setNota(Integer nota) {
+        this.nota = nota;
     }
 
     public void calcularTotal() {

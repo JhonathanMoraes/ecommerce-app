@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-primary" th:href="@{/}">
+            <i class="bi bi-shop me-1"></i> ECommerce
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/pedidos}"><i class="bi bi-bag me-1"></i>Meus Pedidos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/produtos/meus}"><i class="bi bi-box me-1"></i>Meus Produtos</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown" th:if="${session.usuarioLogado != null}">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span th:text="${session.usuarioLogado.email}">usuario@email.com</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" th:href="@{/usuarios/editar/{id}(id=${session.usuarioLogado.id})}">
+                                <i class="bi bi-pencil me-2"></i>Editar Perfil
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" th:href="@{/logout}">
+                                <i class="bi bi-box-arrow-right me-2"></i>Sair
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>
