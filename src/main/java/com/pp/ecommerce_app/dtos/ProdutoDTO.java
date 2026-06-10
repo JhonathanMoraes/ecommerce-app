@@ -1,5 +1,9 @@
 package com.pp.ecommerce_app.dtos;
 
+import java.util.List;
+import java.util.ArrayList;
+
+
 public class ProdutoDTO {
 
     private int id;
@@ -13,6 +17,7 @@ public class ProdutoDTO {
     private String emailUsuario;
 
     private boolean ativo;
+    private List<Integer> categorias = new ArrayList<>();
 
     public ProdutoDTO() {}
 
@@ -100,4 +105,13 @@ public class ProdutoDTO {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+
+    public List<Integer> getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(List<Integer> categorias) {
+        this.categorias = categorias;
+    }
 }
+

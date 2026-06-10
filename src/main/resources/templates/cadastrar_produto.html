@@ -54,6 +54,30 @@
                                   placeholder="Descreva seu produto..."></textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Categorias</label>
+                        <div class="d-flex gap-2 mb-2">
+                            <select id="selectCategorias" class="form-select">
+                                <option value="">-- Selecione uma categoria --</option>
+                                <option th:each="cat : ${todasCategorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
+                            </select>
+                            <button type="button" id="btnAdicionarCategoria" class="btn btn-primary">Adicionar</button>
+                        </div>
+                        <ul id="listaCategoriasSelecionadas" class="list-group mb-2">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" 
+                                th:each="catId : *{categorias}" 
+                                th:data-id="${catId}">
+                                <span th:each="cat : ${todasCategorias}" th:if="${cat.id == catId}" th:text="${cat.nome}">Categoria</span>
+                                <button type="button" class="btn btn-sm btn-danger btn-remover-categoria"><i class="bi bi-trash"></i></button>
+                            </li>
+                        </ul>
+                        <div id="containerCategoriasHidden">
+                            <input type="hidden" name="categorias" th:each="catId : *{categorias}" th:value="${catId}">
+                        </div>
+                    </div>
+
+
+
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label for="quantidade" class="form-label fw-semibold">Quantidade em estoque</label>
@@ -92,6 +116,30 @@
                         <textarea id="descricaoEdit" th:field="*{descricao}" class="form-control" rows="4"></textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Categorias</label>
+                        <div class="d-flex gap-2 mb-2">
+                            <select id="selectCategoriasEdit" class="form-select">
+                                <option value="">-- Selecione uma categoria --</option>
+                                <option th:each="cat : ${todasCategorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
+                            </select>
+                            <button type="button" id="btnAdicionarCategoriaEdit" class="btn btn-primary">Adicionar</button>
+                        </div>
+                        <ul id="listaCategoriasSelecionadasEdit" class="list-group mb-2">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" 
+                                th:each="catId : *{categorias}" 
+                                th:data-id="${catId}">
+                                <span th:each="cat : ${todasCategorias}" th:if="${cat.id == catId}" th:text="${cat.nome}">Categoria</span>
+                                <button type="button" class="btn btn-sm btn-danger btn-remover-categoria"><i class="bi bi-trash"></i></button>
+                            </li>
+                        </ul>
+                        <div id="containerCategoriasHiddenEdit">
+                            <input type="hidden" name="categorias" th:each="catId : *{categorias}" th:value="${catId}">
+                        </div>
+                    </div>
+
+
+
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label for="quantidadeEdit" class="form-label fw-semibold">Quantidade em estoque</label>
@@ -120,5 +168,67 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    configurarAdicaoCategorias("selectCategorias", "btnAdicionarCategoria", "listaCategoriasSelecionadas", "containerCategoriasHidden");
+    configurarAdicaoCategorias("selectCategoriasEdit", "btnAdicionarCategoriaEdit", "listaCategoriasSelecionadasEdit", "containerCategoriasHiddenEdit");
+
+    function configurarAdicaoCategorias(selectId, btnId, listId, containerId) {
+        const select = document.getElementById(selectId);
+        const btnAdd = document.getElementById(btnId);
+        const list = document.getElementById(listId);
+        const hiddenContainer = document.getElementById(containerId);
+
+        if (!select || !btnAdd || !list || !hiddenContainer) return;
+
+        function atualizarInputsHidden() {
+            hiddenContainer.innerHTML = "";
+            const items = list.querySelectorAll("li");
+            items.forEach(item => {
+                const id = item.getAttribute("data-id");
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "categorias";
+                input.value = id;
+                hiddenContainer.appendChild(input);
+            });
+        }
+
+        btnAdd.addEventListener("click", function () {
+            const id = select.value;
+            const name = select.options[select.selectedIndex].text;
+
+            if (!id) return;
+
+            if (list.querySelector(`li[data-id="${id}"]`)) {
+                alert("Esta categoria já foi adicionada.");
+                return;
+            }
+
+            const li = document.createElement("li");
+            li.className = "list-group-item d-flex justify-content-between align-items-center";
+            li.setAttribute("data-id", id);
+            li.innerHTML = `
+                <span>${name}</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remover-categoria"><i class="bi bi-trash"></i></button>
+            `;
+            list.appendChild(li);
+
+            atualizarInputsHidden();
+            select.value = "";
+        });
+
+        list.addEventListener("click", function (e) {
+            if (e.target.classList.contains("btn-remover-categoria") || e.target.closest(".btn-remover-categoria")) {
+                const btn = e.target.classList.contains("btn-remover-categoria") ? e.target : e.target.closest(".btn-remover-categoria");
+                const li = btn.closest("li");
+                li.remove();
+                atualizarInputsHidden();
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
+

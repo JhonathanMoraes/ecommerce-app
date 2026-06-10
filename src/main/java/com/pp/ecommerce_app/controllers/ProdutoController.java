@@ -3,6 +3,8 @@ package com.pp.ecommerce_app.controllers;
 import com.pp.ecommerce_app.dtos.ProdutoDTO;
 import com.pp.ecommerce_app.dtos.UsuarioDTO;
 import com.pp.ecommerce_app.services.ProdutoService;
+import com.pp.ecommerce_app.services.CategoriaService;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,10 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private CategoriaService categoriaService;
+
 
     @GetMapping
     public String listarProdutos(Model modelo) {
@@ -43,6 +49,7 @@ public class ProdutoController {
         ProdutoDTO dto = new ProdutoDTO();
         dto.setUsuario(usuarioLogado.getId());
         modelo.addAttribute("produtoDTO", dto);
+        modelo.addAttribute("todasCategorias", categoriaService.listarAtivas());
         return "cadastrar_produto";
     }
 
@@ -57,6 +64,7 @@ public class ProdutoController {
     @GetMapping("/editar/{id}")
     public String exibirFormularioEdicao(@PathVariable("id") int id, Model modelo) {
         modelo.addAttribute("produtoDTO", produtoService.buscarPorId(id));
+        modelo.addAttribute("todasCategorias", categoriaService.listarAtivas());
         return "cadastrar_produto";
     }
 
