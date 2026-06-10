@@ -24,10 +24,14 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String email, String senha, String endereco) {
-        this.email = email;
-        this.senha = senha;
-        this.endereco = endereco;
+    public Usuario(Builder builder) {
+        this.email = builder.email;
+        this.senha = builder.senha;
+        this.endereco = builder.endereco;
+    }
+    
+    public static Builder builder(String email, String senha, String endereco){
+        return new Builder(email, senha, endereco);
     }
 
     public int getId() {
@@ -68,5 +72,37 @@ public class Usuario {
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+    
+    public static class Builder{
+        private int id;
+        private String email;
+        private String senha;
+        private String endereco;
+        private boolean ativo = true;
+        
+        public Builder(String email, String senha, String endereco){
+            this.email = email;
+            this.senha = senha;
+            this.endereco = endereco;
+        }
+        
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
+        
+        public Builder ativo(boolean ativo){
+            this.ativo = ativo;
+            return this;
+        }
+        
+        public Usuario build(){
+            if(email == null || senha == null){
+                throw new IllegalStateException("Email e senha são obrigatórios");
+            }
+            
+            return new Usuario(this);
+        }
     }
 }

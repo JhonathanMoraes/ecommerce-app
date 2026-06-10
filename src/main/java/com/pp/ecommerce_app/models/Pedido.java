@@ -40,18 +40,22 @@ public class Pedido {
     private double frete;
 
     @Column
-    private Integer nota;
+    private int nota;
 
     public Pedido() {
     }
 
-    public Pedido(Usuario usuario, Produto produto, int quantidade, String tipoDePagamento, String endereco, double frete) {
-        this.usuario = usuario;
-        this.produto = produto;
-        this.quantidade = quantidade;
-        this.tipoDePagamento = tipoDePagamento;
-        this.endereco = endereco;
-        this.frete = frete;
+    public Pedido(Builder builder) {
+        this.usuario = builder.usuario;
+        this.produto = builder.produto;
+        this.quantidade = builder.quantidade;
+        this.tipoDePagamento = builder.tipoDePagamento;
+        this.endereco = builder.endereco;
+        this.frete = builder.frete;
+    }
+    
+    public static Builder builder(Usuario usuario, Produto produto, int quantidade, String tipoDePagamento, String endereco, double frete){
+        return new Builder(usuario, produto, quantidade, tipoDePagamento, endereco, frete);
     }
 
     public int getId() {
@@ -134,17 +138,74 @@ public class Pedido {
         this.frete = frete;
     }
 
-    public Integer getNota() {
+    public int getNota() {
         return nota;
     }
 
-    public void setNota(Integer nota) {
+    public void setNota(int nota) {
         this.nota = nota;
     }
 
     public void calcularTotal() {
         if (this.produto != null) {
             this.total = (this.produto.getPreco() * this.quantidade) + this.frete;
+        }
+    }
+    
+    public static class Builder{
+        private int id;
+        private Usuario usuario;
+        private Produto produto;
+        private int quantidade;
+        private boolean ativo = true;
+        private String status = "PENDENTE";
+        private double total;
+        private String tipoDePagamento;
+        private String endereco;
+        private double frete;
+        private int nota;
+        
+        public Builder(Usuario usuario, Produto produto, int quantidade, String tipoDePagamento, String endereco, double frete){
+            this.usuario = usuario;
+            this.produto = produto;
+            this.quantidade = quantidade;
+            this.tipoDePagamento = tipoDePagamento;
+            this.endereco = endereco;
+            this.frete = frete;
+        }
+        
+        public Builder id(int id){
+            this.id = id;
+            return this;
+        }
+        
+        public Builder ativo(boolean ativo){
+            this.ativo = ativo;
+            return this;
+        }
+        
+        public Builder status(String status){
+            this.status = status;
+            return this;
+        }
+        
+        public Builder total(double total){
+            this.total = total;
+            return this;
+        }
+        
+        public Builder nota(int nota){
+            this.nota = nota;
+            return this;
+        }
+        
+        public Pedido build(){
+            
+            if(usuario == null || produto == null || tipoDePagamento == null){
+                throw new IllegalStateException("Usuário, Produto e Tipo de pagamento são obrigatórios");
+            }
+                        
+            return new Pedido(this);
         }
     }
 }
