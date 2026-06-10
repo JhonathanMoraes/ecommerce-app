@@ -74,14 +74,15 @@ public class PedidoService {
         }
         produtoService.atualizarQuantidadeEmEstoque(produto.getId(), dto.getQuantidade());
 
-        Pedido pedido = new Pedido(
+        Pedido pedido = Pedido.builder(
             usuario,
             produto,
             dto.getQuantidade(),
             dto.getTipoDePagamento(),
             dto.getEndereco(),
             dto.getFrete()
-        );
+            )
+            .build();
 
         pedido.calcularTotal();
 

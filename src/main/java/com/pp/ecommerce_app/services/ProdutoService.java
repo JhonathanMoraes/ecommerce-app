@@ -37,14 +37,17 @@ public class ProdutoService {
     private Produto entidade(ProdutoDTO dto) {
         Usuario usuario = usuarioService.buscarEntidadePorId(dto.getUsuario());
 
-        Produto produto = new Produto();
-        produto.setNome(dto.getNome());
-        produto.setDescricao(dto.getDescricao());
-        produto.setQuantidade(dto.getQuantidade());
-        produto.setPreco(dto.getPreco());
-        produto.setNota(dto.getNota());
-        produto.setUsuario(usuario);
-        produto.setAtivo(dto.isAtivo());
+        Produto produto = Produto.builder(
+            dto.getNome(),
+            dto.getDescricao(),
+            dto.getQuantidade(),
+            dto.getPreco(),
+            dto.getNota(),
+            usuario,
+            dto.isAtivo()
+            )
+            .build();
+        
         return produto;
     }
 

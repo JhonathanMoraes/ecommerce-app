@@ -27,11 +27,13 @@ public class UsuarioService {
     }
 
     private Usuario paraEntidade(UsuarioDTO dto) {
-        Usuario usuario = new Usuario();
-        usuario.setEmail(dto.getEmail());
-        usuario.setSenha(dto.getSenha());
-        usuario.setEndereco(dto.getEndereco());
-        usuario.setAtivo(dto.isAtivo());
+        Usuario usuario = Usuario.builder(
+            dto.getEmail(),
+            dto.getSenha(),
+            dto.getEndereco(),
+            dto.isAtivo()
+            )
+            .build();
         return usuario;
     }
 

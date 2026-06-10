@@ -39,11 +39,13 @@ public class Produto {
         this.descricao = builder.descricao;
         this.quantidade = builder.quantidade;
         this.preco = builder.preco;
+        this.nota = builder.nota;
         this.usuario = builder.usuario;
+        this.ativo = builder.ativo;
     }
     
-    public static Builder builder(String nome, String descricao, int quantidade, double preco, Usuario usuario){
-        return new Builder(nome, descricao, quantidade, preco, usuario);
+    public static Builder builder(String nome, String descricao, int quantidade, double preco, int nota, Usuario usuario, boolean ativo){
+        return new Builder(nome, descricao, quantidade, preco, nota, usuario, ativo);
     }
 
     public int getId() {
@@ -123,26 +125,18 @@ public class Produto {
         private Usuario usuario;
         private boolean ativo = true;
         
-        public Builder(String nome, String descricao, int quantidade, double preco, Usuario usuario){
+        public Builder(String nome, String descricao, int quantidade, double preco, int nota, Usuario usuario, boolean ativo){
             this.nome = nome;
             this.descricao = descricao;
             this.quantidade = quantidade;
             this.preco = preco;
+            this.nota = nota;
             this.usuario = usuario;
+            this.ativo = ativo;
         }
         
         public Builder id(int id){
             this.id = id;
-            return this;
-        }
-        
-        public Builder nota(int nota){
-            this.nota = nota;
-            return this;
-        }
-        
-        public Builder ativo(boolean ativo){
-            this.ativo = ativo;
             return this;
         }
         
