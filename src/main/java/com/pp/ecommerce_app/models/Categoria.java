@@ -34,8 +34,8 @@ public class Categoria {
         this.ativo = builder.ativo;
     }
 
-    public static Builder builder(String nome) {
-        return new Builder(nome);
+    public static Builder builder(String nome, boolean ativo) {
+        return new Builder(nome, ativo);
     }
 
     public int getId() {
@@ -63,8 +63,9 @@ public class Categoria {
         private String nome;
         private boolean ativo = true;
 
-        private Builder(String nome) {
+        private Builder(String nome, boolean ativo) {
             this.nome = nome;
+            this.ativo = ativo;
         }
 
         public Builder id(int id) {

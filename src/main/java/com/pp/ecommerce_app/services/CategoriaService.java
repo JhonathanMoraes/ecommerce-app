@@ -24,9 +24,12 @@ public class CategoriaService {
     }
 
     private Categoria paraEntidade(CategoriaDTO dto) {
-        Categoria categoria = new Categoria();
-        categoria.setNome(dto.getNome());
-        categoria.setAtivo(dto.isAtivo());
+        Categoria categoria = Categoria.builder(
+            dto.getNome(),
+            dto.isAtivo()
+            )
+            .build();
+        
         return categoria;
     }
 
