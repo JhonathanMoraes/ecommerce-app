@@ -41,7 +41,7 @@ public class Pedido {
     private double frete;
 
     @Column
-    private int nota;
+    private Integer nota;
 
     public Pedido() {
     }
@@ -139,11 +139,11 @@ public class Pedido {
         this.frete = frete;
     }
 
-    public int getNota() {
+    public Integer getNota() {
         return nota;
     }
 
-    public void setNota(int nota) {
+    public void setNota(Integer nota) {
         this.nota = nota;
     }
 
@@ -162,7 +162,7 @@ public class Pedido {
         private String tipoDePagamento;
         private String endereco;
         private double frete;
-        private int nota;
+        private Integer nota;
         
         public Builder(Usuario usuario, Produto produto, int quantidade, String tipoDePagamento, String endereco, double frete){
             this.usuario = usuario;
@@ -193,7 +193,7 @@ public class Pedido {
             return this;
         }
         
-        public Builder nota(int nota){
+        public Builder nota(Integer nota){
             this.nota = nota;
             return this;
         }

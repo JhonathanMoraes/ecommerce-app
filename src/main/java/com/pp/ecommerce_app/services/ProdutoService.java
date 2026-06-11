@@ -25,16 +25,15 @@ public class ProdutoService {
 
     private ProdutoDTO dto(Produto produto) {
         ProdutoDTO dto = new ProdutoDTO(
-            produto.getId(),
-            produto.getNome(),
-            produto.getDescricao(),
-            produto.getQuantidade(),
-            produto.getPreco(),
-            produto.getNota(),
-            produto.getUsuario() != null ? produto.getUsuario().getId() : 0,
-            produto.getUsuario() != null ? produto.getUsuario().getEmail() : "",
-            produto.isAtivo()
-        );
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getQuantidade(),
+                produto.getPreco(),
+                produto.getNota(),
+                produto.getUsuario() != null ? produto.getUsuario().getId() : 0,
+                produto.getUsuario() != null ? produto.getUsuario().getEmail() : "",
+                produto.isAtivo());
         dto.setCategorias(produto.getCategorias().stream().map(Categoria::getId).collect(Collectors.toList()));
         return dto;
     }
@@ -42,24 +41,21 @@ public class ProdutoService {
     private Produto entidade(ProdutoDTO dto) {
         Usuario usuario = usuarioService.buscarEntidadePorId(dto.getUsuario());
 
-
         Produto produto = Produto.builder(
-            dto.getNome(),
-            dto.getDescricao(),
-            dto.getQuantidade(),
-            dto.getPreco(),
-            dto.getNota(),
-            usuario,
-            dto.isAtivo()
-            )
-            .build();
+                dto.getNome(),
+                dto.getDescricao(),
+                dto.getQuantidade(),
+                dto.getPreco(),
+                dto.getNota(),
+                usuario,
+                dto.isAtivo())
+                .build();
         if (dto.getCategorias() != null && !dto.getCategorias().isEmpty()) {
             produto.setCategorias(categoriaService.buscarEntidadesPorIds(dto.getCategorias()));
         }
 
         return produto;
     }
-
 
     public List<ProdutoDTO> listarAtivos() {
         return produtoRepository.findAllByAtivo(true)
@@ -109,7 +105,6 @@ public class ProdutoService {
         }
         return dto(produtoRepository.save(produto));
     }
-
 
     public void avaliar(int id, int nota) {
         Produto produto = produtoRepository.findById(id)
