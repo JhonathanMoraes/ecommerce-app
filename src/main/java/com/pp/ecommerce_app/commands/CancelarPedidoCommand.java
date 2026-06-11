@@ -13,8 +13,7 @@ public class CancelarPedidoCommand implements ICommand<Void> {
     }
 
     @Override
-    public Void executar() {
+    public void executar() {
         pedidoService.cancelar(id);
-        return null;
     }
 }

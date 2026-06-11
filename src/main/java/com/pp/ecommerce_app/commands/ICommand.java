@@ -9,5 +9,5 @@ package com.pp.ecommerce_app.commands;
  * @author alunocmc
  */
 public interface ICommand<T> {
-    T executar();
+    void executar();
 }

@@ -15,8 +15,7 @@ public class AtualizarStatusPedidoCommand implements ICommand<Void> {
     }
 
     @Override
-    public Void executar() {
+    public void executar() {
         pedidoService.atualizarStatus(id, status);
-        return null;
     }
 }

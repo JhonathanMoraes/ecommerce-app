@@ -14,7 +14,7 @@ public class CriarPedidoCommand implements ICommand<PedidoDTO> {
     }
 
     @Override
-    public PedidoDTO executar() {
-        return pedidoService.criarPedido(dto);
+    public void executar() {
+        pedidoService.criarPedido(dto);
     }
 }

@@ -15,8 +15,7 @@ public class AvaliarPedidoCommand implements ICommand<Void> {
     }
 
     @Override
-    public Void executar() {
+    public void executar() {
         pedidoService.avaliarPedido(id, nota);
-        return null;
     }
 }
