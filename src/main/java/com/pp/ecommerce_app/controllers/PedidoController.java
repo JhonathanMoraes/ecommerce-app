@@ -4,6 +4,10 @@ import com.pp.ecommerce_app.dtos.PedidoDTO;
 import com.pp.ecommerce_app.dtos.UsuarioDTO;
 import com.pp.ecommerce_app.services.PedidoService;
 import com.pp.ecommerce_app.services.ProdutoService;
+import com.pp.ecommerce_app.commands.CriarPedidoCommand;
+import com.pp.ecommerce_app.commands.AtualizarStatusPedidoCommand;
+import com.pp.ecommerce_app.commands.CancelarPedidoCommand;
+import com.pp.ecommerce_app.commands.AvaliarPedidoCommand;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +54,7 @@ public class PedidoController {
                                HttpSession sessao,
                                RedirectAttributes atributos) {
         try {
-            pedidoService.criarPedido(pedidoDTO);
+            new CriarPedidoCommand(pedidoService, pedidoDTO).executar();
             atributos.addFlashAttribute("sucesso", "Pedido realizado com sucesso!");
         } catch (IllegalArgumentException e) {
             atributos.addFlashAttribute("erro", e.getMessage());
@@ -63,14 +67,14 @@ public class PedidoController {
     public String atualizarStatus(@PathVariable("id") int id,
                                   @RequestParam("status") String status,
                                   RedirectAttributes atributos) {
-        pedidoService.atualizarStatus(id, status);
+        new AtualizarStatusPedidoCommand(pedidoService, id, status).executar();
         atributos.addFlashAttribute("sucesso", "Status do pedido atualizado!");
         return "redirect:/pedidos/" + id;
     }
 
     @PostMapping("/cancelar/{id}")
     public String cancelarPedido(@PathVariable("id") int id, RedirectAttributes atributos) {
-        pedidoService.cancelar(id);
+        new CancelarPedidoCommand(pedidoService, id).executar();
         atributos.addFlashAttribute("sucesso", "Pedido cancelado com sucesso!");
         return "redirect:/pedidos";
     }
@@ -80,7 +84,7 @@ public class PedidoController {
                                 @RequestParam("nota") int nota,
                                 RedirectAttributes atributos) {
         try {
-            pedidoService.avaliarPedido(id, nota);
+            new AvaliarPedidoCommand(pedidoService, id, nota).executar();
             atributos.addFlashAttribute("sucesso", "Avaliação do pedido registrada!");
         } catch (IllegalArgumentException e) {
             atributos.addFlashAttribute("erro", e.getMessage());
