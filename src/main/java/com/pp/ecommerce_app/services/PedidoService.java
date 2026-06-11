@@ -9,6 +9,12 @@ import com.pp.ecommerce_app.models.pagamento.PagamentoCredito;
 import com.pp.ecommerce_app.models.pagamento.PagamentoDebito;
 import com.pp.ecommerce_app.models.pagamento.PagamentoPix;
 import com.pp.ecommerce_app.repositories.PedidoRepository;
+import com.pp.ecommerce_app.models.Categoria;
+import com.pp.ecommerce_app.models.decorator.CalculadoraPreco;
+import com.pp.ecommerce_app.models.decorator.CalculadoraPrecoBase;
+import com.pp.ecommerce_app.models.decorator.DescontoLivrosDecorator;
+import com.pp.ecommerce_app.models.decorator.DescontoFreteMidiaDigitalDecorator;
+import com.pp.ecommerce_app.models.decorator.TaxaGamerDecorator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +71,31 @@ public class PedidoService {
         return pagamento;
     }
 
+    private CalculadoraPreco aplicarDecoratorCategoria(CalculadoraPreco calculadoraBase, List<Categoria> categorias) {
+        if (categorias == null) {
+            return calculadoraBase;
+        }
+        
+        CalculadoraPreco calculadoraDecorada = calculadoraBase;
+        for (Categoria categoria : categorias) {
+            calculadoraDecorada = aplicarDecorador(calculadoraDecorada, categoria);
+        }
+        return calculadoraDecorada;
+    }
+
+    private CalculadoraPreco aplicarDecorador(CalculadoraPreco calculadora, Categoria categoria) {
+        if ("Livros".equalsIgnoreCase(categoria.getNome())) {
+            return new DescontoLivrosDecorator(calculadora);
+        } 
+        if ("Gamer".equalsIgnoreCase(categoria.getNome())) {
+            return new TaxaGamerDecorator(calculadora);
+        }
+        if ("Mídia Digital".equalsIgnoreCase(categoria.getNome()) || "Midia Digital".equalsIgnoreCase(categoria.getNome())) {
+            return new DescontoFreteMidiaDigitalDecorator(calculadora);
+        }
+        return calculadora;
+    }
+
     public PedidoDTO criarPedido(PedidoDTO dto) {
         Usuario usuario = usuarioService.buscarEntidadePorId(dto.getUsuario());
         Produto produto  = produtoService.buscarEntidadePorId(dto.getProduto());
@@ -84,7 +115,11 @@ public class PedidoService {
             )
             .build();
 
-        pedido.calcularTotal();
+        CalculadoraPreco calculadora = new CalculadoraPrecoBase();
+        calculadora = aplicarDecoratorCategoria(calculadora, produto.getCategorias());
+
+        double totalCalculado = calculadora.calcular(pedido);
+        pedido.setTotal(totalCalculado);
 
         Pagamento pagamento = resolverPagamento(dto.getTipoDePagamento());
         pedido.setTotal(pagamento.aplicarDesconto(pedido));

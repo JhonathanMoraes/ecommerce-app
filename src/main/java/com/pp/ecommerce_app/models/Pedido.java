@@ -1,5 +1,6 @@
 package com.pp.ecommerce_app.models;
 
+import com.pp.ecommerce_app.models.decorator.CalculadoraPrecoBase;
 import jakarta.persistence.*;
 
 @Entity
@@ -147,9 +148,7 @@ public class Pedido {
     }
 
     public void calcularTotal() {
-        if (this.produto != null) {
-            this.total = (this.produto.getPreco() * this.quantidade) + this.frete;
-        }
+        this.total = new CalculadoraPrecoBase().calcular(this);
     }
     
     public static class Builder{

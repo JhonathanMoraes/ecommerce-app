@@ -103,10 +103,9 @@ public class ProdutoService {
         produto.setQuantidade(dto.getQuantidade());
         produto.setPreco(dto.getPreco());
         produto.setAtivo(true);
+        produto.setCategorias(new java.util.ArrayList<>());
         if (dto.getCategorias() != null) {
             produto.setCategorias(categoriaService.buscarEntidadesPorIds(dto.getCategorias()));
-        } else {
-            produto.setCategorias(new java.util.ArrayList<>());
         }
         return dto(produtoRepository.save(produto));
     }
