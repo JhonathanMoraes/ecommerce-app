@@ -22,7 +22,6 @@ public class ProdutoController {
     @Autowired
     private CategoriaService categoriaService;
 
-
     @GetMapping
     public String listarProdutos(Model modelo) {
         modelo.addAttribute("produtos", produtoService.listarAtivos());
@@ -39,7 +38,9 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public String exibirDetalhe(@PathVariable("id") int id, Model modelo) {
-        modelo.addAttribute("produto", produtoService.buscarPorId(id));
+        ProdutoDTO produto = produtoService.buscarPorId(id);
+        modelo.addAttribute("produto", produto);
+        modelo.addAttribute("nomesCategorias", categoriaService.buscarNomesPorIds(produto.getCategorias()));
         return "detalhes_produto";
     }
 
@@ -70,8 +71,8 @@ public class ProdutoController {
 
     @PostMapping("/atualizar/{id}")
     public String atualizarProduto(@PathVariable("id") int id,
-                                           @ModelAttribute("produtoDTO") ProdutoDTO produtoDTO,
-                                           RedirectAttributes atributos) {
+                                   @ModelAttribute("produtoDTO") ProdutoDTO produtoDTO,
+                                   RedirectAttributes atributos) {
         produtoService.atualizar(id, produtoDTO);
         atributos.addFlashAttribute("sucesso", "Produto atualizado com sucesso!");
         return "redirect:/produtos/meus";

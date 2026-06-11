@@ -30,9 +30,36 @@
     </div>
 
     <div class="row g-4">
-        <!-- Imagem -->
+        <!-- Imagem + Categorias -->
         <div class="col-lg-5">
-            <img th:src="@{/default_product_img.png}" alt="Imagem do produto" class="img-fluid rounded shadow object-fit-cover w-100" style="height: 400px;">
+            <img th:src="@{/default_product_img.png}" alt="Imagem do produto"
+                 class="img-fluid rounded shadow object-fit-cover w-100" style="height: 400px;">
+
+            <!-- BLOCO DE CATEGORIAS -->
+            <div class="mt-3 p-3 bg-light rounded shadow-sm">
+                <h6 class="fw-semibold mb-3">
+                    <i class="bi bi-tags-fill me-1 text-primary"></i>Categorias
+                </h6>
+
+                <!-- Estado: nenhuma categoria cadastrada -->
+                <p th:if="${#lists.isEmpty(nomesCategorias)}" class="text-muted small mb-0 fst-italic">
+                    <i class="bi bi-slash-circle me-1"></i>Sem categorias cadastradas.
+                </p>
+
+                <!-- Lista de categorias -->
+                <ul th:unless="${#lists.isEmpty(nomesCategorias)}"
+                    class="list-group list-group-flush">
+                    <li th:each="nome : ${nomesCategorias}"
+                        class="list-group-item d-flex align-items-center gap-2 px-0 bg-transparent">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10"
+                              style="width: 28px; height: 28px; min-width: 28px;">
+                            <i class="bi bi-tag-fill text-primary" style="font-size: 0.7rem;"></i>
+                        </span>
+                        <span class="fw-medium" th:text="${nome}">Categoria</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- FIM DO BLOCO DE CATEGORIAS -->
         </div>
 
         <!-- Detalhes -->
@@ -101,7 +128,7 @@
                         <label for="frete" class="form-label fw-semibold">Frete (R$)</label>
                         <div class="input-group">
                             <span class="input-group-text">R$</span>
-                            <select type="number" id="frete" name="frete" class="form-select" requires>
+                            <select id="frete" name="frete" class="form-select" required>
                                 <option value="">Selecione...</option>
                                 <option value="0">Frete Grátis</option>
                                 <option value="5.0">5R$</option>

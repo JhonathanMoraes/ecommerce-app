@@ -44,6 +44,14 @@ public class CategoriaService {
         return categoriaRepository.findAllById(ids);
     }
 
+    public List<String> buscarNomesPorIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) return new java.util.ArrayList<>();
+        return buscarEntidadesPorIds(ids)
+                .stream()
+                .map(Categoria::getNome)
+                .collect(Collectors.toList());
+    }
+
     public Categoria buscarEntidadePorId(int id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Categoria não encontrada: id=" + id));
