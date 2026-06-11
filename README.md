@@ -23,7 +23,7 @@ Sistema de e-commerce construído com Java e Spring Boot. Este projeto tem foco 
 
 ## 🧩 Padrões de Projeto Utilizados
 
-1.  **Decorator (Obrigatório)**: Utilizado no cálculo do total do pedido. A interface `CalculadoraPreco` é envolvida por classes como `DescontoLivrosDecorator` e `TaxaGamerDecorator`, que aplicam lógicas dinâmicas de preço dependendo da categoria do produto no momento da compra.
+1.  **Decorator**: Utilizado no cálculo do total do pedido. A interface `CalculadoraPreco` é envolvida por classes como `DescontoLivrosDecorator` e `TaxaGamerDecorator`, que aplicam lógicas dinâmicas de preço dependendo da categoria do produto no momento da compra.
 2.  **Strategy**: Implementado para o cálculo e resolução do método de pagamento. A interface `Pagamento` possui estratégias como `PagamentoPix`, `PagamentoCredito` e `PagamentoDebito`, permitindo extensibilidade sem usar cadeias infinitas de `if/else`.
 3.  **Command**: Usado na camada de apresentação (Controllers) para interagir com o `PedidoService`. A interface genérica `ICommand` encapsula intenções do usuário (`CriarPedidoCommand`, `CancelarPedidoCommand`), separando o invocador da lógica de negócio executada.
 4.  **Builder**: Aplicado em múltiplas entidades complexas do domínio (`Produto`, `Pedido`, `Usuario`) para facilitar a instanciação de objetos consistentes sem sobrecarregar construtores longos (Telescoping Constructor Anti-Pattern).

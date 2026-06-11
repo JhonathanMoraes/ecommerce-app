@@ -17,8 +17,6 @@ public class DescontoFreteMidiaDigitalDecorator extends PedidoDecorator {
             for (Categoria categoria : pedido.getProduto().getCategorias()) {
                 if ("Mídia Digital".equalsIgnoreCase(categoria.getNome()) || "Midia Digital".equalsIgnoreCase(categoria.getNome())) {
                     precoCalculado -= pedido.getFrete();
-                    // Garante que não desconte o frete mais de uma vez se houver categorias duplicadas,
-                    // embora não devesse ocorrer, podemos usar break.
                     break;
                 }
             }
