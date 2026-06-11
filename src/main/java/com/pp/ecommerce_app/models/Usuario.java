@@ -28,10 +28,11 @@ public class Usuario {
         this.email = builder.email;
         this.senha = builder.senha;
         this.endereco = builder.endereco;
+        this.ativo = builder.ativo;
     }
     
-    public static Builder builder(String email, String senha, String endereco){
-        return new Builder(email, senha, endereco);
+    public static Builder builder(String email, String senha, String endereco, boolean ativo){
+        return new Builder(email, senha, endereco, ativo);
     }
 
     public int getId() {
@@ -81,19 +82,15 @@ public class Usuario {
         private String endereco;
         private boolean ativo = true;
         
-        public Builder(String email, String senha, String endereco){
+        public Builder(String email, String senha, String endereco, boolean ativo){
             this.email = email;
             this.senha = senha;
             this.endereco = endereco;
+            this.ativo = ativo;
         }
         
         public Builder id(int id){
             this.id = id;
-            return this;
-        }
-        
-        public Builder ativo(boolean ativo){
-            this.ativo = ativo;
             return this;
         }
         

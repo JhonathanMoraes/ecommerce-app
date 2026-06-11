@@ -3,6 +3,7 @@ package com.pp.ecommerce_app.services;
 import com.pp.ecommerce_app.dtos.ProdutoDTO;
 import com.pp.ecommerce_app.models.Produto;
 import com.pp.ecommerce_app.models.Usuario;
+import com.pp.ecommerce_app.models.Categoria;
 import com.pp.ecommerce_app.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class ProdutoService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     private ProdutoDTO dto(Produto produto) {
         ProdutoDTO dto = new ProdutoDTO(
             produto.getId(),
@@ -31,11 +35,13 @@ public class ProdutoService {
             produto.getUsuario() != null ? produto.getUsuario().getEmail() : "",
             produto.isAtivo()
         );
+        dto.setCategorias(produto.getCategorias().stream().map(Categoria::getId).collect(Collectors.toList()));
         return dto;
     }
 
     private Produto entidade(ProdutoDTO dto) {
         Usuario usuario = usuarioService.buscarEntidadePorId(dto.getUsuario());
+
 
         Produto produto = Produto.builder(
             dto.getNome(),
@@ -47,9 +53,13 @@ public class ProdutoService {
             dto.isAtivo()
             )
             .build();
-        
+        if (dto.getCategorias() != null && !dto.getCategorias().isEmpty()) {
+            produto.setCategorias(categoriaService.buscarEntidadesPorIds(dto.getCategorias()));
+        }
+
         return produto;
     }
+
 
     public List<ProdutoDTO> listarAtivos() {
         return produtoRepository.findAllByAtivo(true)
@@ -93,8 +103,14 @@ public class ProdutoService {
         produto.setQuantidade(dto.getQuantidade());
         produto.setPreco(dto.getPreco());
         produto.setAtivo(true);
+        if (dto.getCategorias() != null) {
+            produto.setCategorias(categoriaService.buscarEntidadesPorIds(dto.getCategorias()));
+        } else {
+            produto.setCategorias(new java.util.ArrayList<>());
+        }
         return dto(produtoRepository.save(produto));
     }
+
 
     public void avaliar(int id, int nota) {
         Produto produto = produtoRepository.findById(id)

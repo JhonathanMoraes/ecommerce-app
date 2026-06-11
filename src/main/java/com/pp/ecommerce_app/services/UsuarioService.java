@@ -34,6 +34,7 @@ public class UsuarioService {
             dto.isAtivo()
             )
             .build();
+        
         return usuario;
     }
 
